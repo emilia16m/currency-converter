@@ -1,0 +1,198 @@
+.wrapper_dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dropdown {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 290px 150px;
+    width: 440px;
+    height: 50px;
+    background-color: #F6F7F8;
+    border: 1px solid #E3EBEF;
+    border-radius: 5px;
+}
+
+.dropdown_active {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 290px 150px;
+    width: 440px;
+    height: 50px;
+    background-color: #F6F7F8;
+    border-radius: 5px 5px 0 0;
+    border: 1px solid #C1D9E6;
+    border-bottom: none;
+}
+
+.dropdown_form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown_form input {
+    max-width: 230px;
+}
+
+.dropdown_item {
+    display: flex;
+    align-items: center;
+    padding-left: 36px;
+    padding-right: 54px;
+}
+
+.active_item {
+    display: flex;
+    align-items: center;
+}
+
+.active_item .icon {
+    margin-right: 14.39px;
+    width: 15px;
+    height: 20px;
+}
+
+.active_item input {
+    width: 60px;
+    padding-left: 0px;
+}
+
+.icon img {
+    align-items: center;
+    width: 15px;
+    height: 20px;
+}
+
+.crypto_tic {
+    text-transform: uppercase;
+    line-height: 23px;
+}
+
+.drop_button {
+    background-color: #F6F7F8;
+    border: none;
+    margin-left: -5px;
+    width: 10px;
+    cursor: pointer;
+}
+
+.dropdown_menu {
+    box-sizing: border-box;
+    position: absolute;
+    height: 144px;
+    width: 440px;
+    border-top: 1px solid #E3EBEF;
+    border: 1px solid #C1D9E6;
+    border-radius: 0 0 5px 5px;
+    border-top: 1px solid #E3EBEF;
+    background-color: #F6F7F8;
+    margin-top: 49px;
+    margin-left: -1px;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+.dropdown_menuu::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.dropdown_menu .list {
+    list-style: none;
+    margin: 0;
+}
+
+.dropdown_menu .list .list_item {
+    display: flex;
+    justify-content: left;
+    padding-left: 20px;
+    height: 48px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dropdown_menu .list .list_item:hover {
+    background: #EAF1F7;
+}
+
+.dropdown_menu .list .list_item .icon {
+    width: 15px;
+    height: 20px;
+}
+
+.dropdown_menu .list .list_item div {
+    margin-right: 15px;
+}
+
+.dropdown_menu .list .list_item .crypto_name {
+    color: #80A2B6;
+}
+
+
+.switch {
+    cursor: pointer;
+}
+
+.switch svg {
+    display: block;
+    height: 24px;
+}
+
+.error {
+    position: absolute;
+    margin-top: -30px;
+    color: #E03F3F;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 23px;
+}
+
+.none {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .wrapper_dropdown {
+        display: block;
+    }
+
+    .dropdown {
+        width: 328px;
+        grid-template-columns: 178px 150px;
+    }
+
+    .dropdown_active {
+        width: 328px;
+        grid-template-columns: 178px 150px;
+    }
+
+    .dropdown_menu {
+        width: 328px;
+    }
+
+    .dropdown_menu .list .list_item {
+        font-size: 12px;
+        height: 35px;
+    }
+
+    .dropdown:first-child {
+        margin-bottom: 20px;
+    }
+
+    .dropdown:last-child {
+        margin-top: 20px;
+    }
+
+    .switch {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

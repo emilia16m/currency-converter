@@ -1,0 +1,26 @@
+.descr {
+    padding-top: 220px;
+}
+
+.descr h2 {
+    font-size: 50px;
+    margin: auto;
+    font-weight: 300;
+    line-height: 120%;
+}
+
+.descr p {
+    font-size: 20px;
+    margin-top: 16px;
+    margin-bottom: 60px;
+}
+
+@media (max-width: 768px) {
+    .descr h2 {
+        font-size: 40px;
+    }
+
+    .descr p {
+        margin-top: 14px;
+    }
+}
