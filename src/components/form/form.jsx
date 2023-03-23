@@ -9,7 +9,7 @@ const Forms = () => {
                         <label>Your Ethereum address</label>
                         <input></input>
                     </div>
-                    <button className='btn_form'>Exchange</button>
+                    <button className='btn_form'>EXCHANGE</button>
                 </div>
             </div>
         </div>

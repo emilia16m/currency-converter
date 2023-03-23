@@ -6,7 +6,7 @@
   }
 
   .form {
-    margin-top: 100px;
+    margin-top: 32px;
   }
 
   .form_wrapp {
@@ -16,7 +16,6 @@
   }
 
   .input_wrapp input {
-    box-sizing: border-box;
     margin-top: 8px;
     width: 723px;
     height: 48px;
@@ -34,7 +33,7 @@
     width: 205px;
     font-weight: 700;
     font-size: 16px;
-    line-height: 120%;
+    line-height: 19.2px;
   }
 
   .btn_form:hover {
