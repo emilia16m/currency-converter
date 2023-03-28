@@ -1,56 +1,110 @@
-import React, { useEffect, useState } from "react";
-import Axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import vector from '../Vector.svg';
+import vectorOff from '../Vector_off.svg';
+import line from '../line.svg';
 
-const Right = ({ crypto_info, from, setTo, to, setResult, result, setImgto, imgto }) => {
-    const [isActive, setActive] = useState(false)
-    const handleActive = () => {
-        setActive(!isActive)
+function Right({
+  data, setTo, to, result,
+}) {
+  const [isActive, setActive] = useState(false);
+  const [queryTo, setQueryTo] = useState('');
+  const [cryptoItemRight, setCryptoItemRight] = useState();
+  const [cryptoList, setCryptoList] = useState([]);
+
+  const cryptoInfo = data.map((item) => ({
+    ticker: `${item.ticker}`,
+    name: `${item.name}`,
+    img: `${item.image}`,
+  }));
+
+  useEffect(() => {
+    setCryptoList(cryptoInfo);
+  }, [data]);
+
+  const handleClick = (e) => {
+    const index = e.currentTarget.getAttribute('data-index');
+    const value = cryptoList[index];
+    setTo(value);
+    setActive(false);
+    setQueryTo('');
+  };
+
+  const filterCrypto = () => {
+    if (!queryTo) {
+      return (cryptoInfo);
     }
-    const handleClick = (e) => {
-        const index = e.currentTarget.getAttribute("data-index")
-        const value = crypto_info[index]
-        setTo(value)
-    }
-   const crypto_item = crypto_info.map(function (item, index) {
-       return (
-           <div className="list_item" data-index={index} id={item.name} onClick={handleClick}>
-               <div className="icon"> <img src={item.img} alt='icn' /> </div>
-               <div id="tickerCrypto" className="crypto_tic">{item.ticker}</div>
-               <div className="crypto_name"> {item.name}</div>
-           </div>
-       )
-   })
+    const filtered = cryptoInfo.filter((crypto) => crypto.ticker.includes(queryTo.toLowerCase()));
     return (
-        <div className={isActive ? "dropdown_active" : "dropdown"}>
-            <div className="dropdown_form">
-                <input placeholder="" value={result} disabled/>
+      filtered
+    );
+  };
+  useEffect(() => {
+    const filteredCrypto = filterCrypto(queryTo);
+    setCryptoList(filteredCrypto);
+  }, [queryTo]);
 
-                <img src={require('../line.svg').default} alt="line" />
-            </div>
+  const setCryptoItem2 = () => cryptoList.map((item, index) => (
+    <div className="list_item" role="button" data-index={index} key={item.ticker} aria-hidden="true" onClick={handleClick}>
+      <div className="icon"><img src={item.img} alt="icn" /></div>
+      <div id="tickerCrypto" className="crypto_tic">{item.ticker}</div>
+      <div className="crypto_name">{item.name}</div>
+    </div>
+  ));
 
-            <div className="dropdown_item">
-                <div className="active_item">
-                    <div className="icon"><img className="genimg" src={to.img}></img></div>
-                    <input className="crypto_tic" value={to.ticker} disabled></input>
-                </div>
-                <button className="drop_button" onClick={handleActive}>
-                    <img src={require('../Vector.svg').default} alt="vector" />
-                </button>
-            </div>
-           
+  useEffect(() => {
+    setCryptoItemRight(setCryptoItem2());
+  }, [cryptoList]);
 
+  const listRef = useRef(null);
+  const dropRef = useRef(null);
 
-            {
+  useEffect(() => {
+    const handleClickEvent = (e) => {
+      if (!listRef.current) {
+        setActive(true);
+      }
+      if (!dropRef.current.contains(e.target)) {
+        setActive(false);
+      }
+    };
+    if (isActive) {
+      document.addEventListener('click', handleClickEvent);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickEvent);
+    };
+  }, [isActive]);
+
+  return (
+    <div ref={dropRef} className={isActive ? 'dropdown_active' : 'dropdown'}>
+      <div className={isActive ? 'none' : 'dropdown_form '}>
+        <input placeholder="" value={result} disabled />
+        <img src={line} alt="line" />
+      </div>
+      <input className={isActive ? 'search' : 'none'} onChange={(e) => setQueryTo(e.target.value)} value={queryTo} placeholder="Search" type="text" />
+
+      <div className="dropdown_item">
+        <div className={isActive ? 'none' : 'active_item'}>
+          <div className="icon"><img className="genimg" src={to.img} alt="icon " /></div>
+          <input className="crypto_tic" value={to.ticker} disabled />
+        </div>
+        <button type="button" className="drop_button" onClick={() => setActive(!isActive)}>
+          <img className={isActive ? 'none' : 'var'} src={vector} alt="vector" />
+          <img className={isActive ? 'var_off' : 'none'} src={vectorOff} alt="vector" />
+        </button>
+      </div>
+
+      {
                 isActive && (
-                    <div className="dropdown_menu">
-                        <div className="list">
-                            {crypto_item}
-                        </div>
-                    </div>
+                <div ref={listRef} className="dropdown_menu">
+                  <div className="list">
+                    {cryptoItemRight}
+                  </div>
+                </div>
                 )
             }
-        </div>
-    )
+    </div>
+  );
 }
 
 export default Right;

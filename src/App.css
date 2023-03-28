@@ -1,5 +1,12 @@
 .container {
-  max-width: 960px;
+  width: 960px;
+  margin: auto;
+}
+.App {
+  display: flex;
+  height: 800px;
+}
+.app_wrapper {
   margin: auto;
 }
 .error_descr{
@@ -16,5 +23,8 @@
 @media (max-width: 768px) {
   .container {
     max-width: 328px;
+  }
+  .error_descr {
+    justify-content: center;
   }
 }

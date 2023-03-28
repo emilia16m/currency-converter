@@ -1,140 +1,128 @@
-import React, { useEffect, useState } from "react";
-import Axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import vector from '../Vector.svg';
+import vectorOff from '../Vector_off.svg';
+import line from '../line.svg';
 
-const Left = ({  data, crypto_info, setFrom, setResult, from, setInput, input, min }) => {
-    const [isOpen, setOpen] = useState(false)
-    const [error, setError] = useState(false)
-    const handleOpen = () => {
-        setOpen(!isOpen);
+function Left({
+  data, setFrom, setResult, from, setInput, input, min,
+}) {
+  const [isOpen, setOpen] = useState(false);
+  const [error, setError] = useState(false);
+  const [query, setQuery] = useState('');
+  const [cryptoItem, setCryptoItem] = useState();
+  const [cryptoList, setCryptoList] = useState([]);
+
+  const cryptoInfo = data.map((item) => ({
+    ticker: `${item.ticker}`,
+    name: `${item.name}`,
+    img: `${item.image}`,
+  }));
+
+  useEffect(() => {
+    setCryptoList(cryptoInfo);
+  }, [data]);
+
+  const inputHandler = (e) => {
+    setInput(e.target.value);
+    if (parseFloat(e.target.value) < min) {
+      setResult('—');
+      setError(true);
+    } else {
+      setError(false);
     }
-
-    const inputHandler = (e) => {
-        setInput(e.target.value)
-        if (parseFloat(e.target.value) < min) {
-            setResult(`—`)
-            setError(true)
-        } else {
-            setError(false)
-        }
+  };
+  const handleClick = (e) => {
+    const index = e.currentTarget.getAttribute('data-index');
+    const value = cryptoList[index];
+    setFrom(value);
+    setOpen(false);
+    setQuery('');
+  };
+  const filterCryptoLeft = () => {
+    if (!query) {
+      return (cryptoInfo);
     }
-
-        const [query, setQuery] = useState("")
-        const [cryptoList, setCryptoList] = useState([])
-
-        useEffect(() => {
-            setCryptoList(crypto_info)
-        }, [data])
-        console.log(cryptoList)
-
-        const filterCrypto = (query) => {
-        if (!query) {
-          return (crypto_info);
-        } else {
-            console.log("2")
-            const filtered = crypto_info.filter(crypto => crypto.ticker.includes(query)) 
-            return (
-                filtered
-            );
-        }
-}
-        useEffect(() => {
-            const filteredCrypto = filterCrypto(query);
-            setCryptoList(filteredCrypto);
-            //   console.log(cryptoList)
-        }, [query]);
-
-    
-        const handleClick = (e) => {
-            const index = e.currentTarget.getAttribute("data-index")
-            const value = cryptoList[index]
-            setFrom(value)
-        }
-        const [crypto_item, setCryptoItem] = useState()
-
-        useEffect(() => {
-            console.log('im here');
-            setCryptoItem(setCryptoItem2())
-        }, [cryptoList]);
-
-
-        const setCryptoItem2 = () => cryptoList.map(function (item, index) {
-            return (
-                <div className="list_item" key={item.ticker} data-index={index} onClick={handleClick}>
-                    <div className="icon"> <img src={item.img} alt='icn' /> </div>
-                    <div id="tickerCrypto" className="crypto_tic">{item.ticker}</div>
-                    <div className="crypto_name"> {item.name}</div>
-                </div>
-            )
-        })
-
-        
-
-   
-    
-      
-    
-
-    //   const handleClick = (e) => {
-   
-
-
-
-     // const [ crypto, setCrypto ] = useState() 
-    // const [ query, setQuery] = useState("") 
-
-    // function renderCrypto(query) { 
-    //     const filtered = crypto_info.filter(crypto => crypto.ticker.includes(query)) 
-    //     if (!query) {
-    //         return(crypto_item)
-    //     }
-    //     return filtered.map(function (item, index) {     
-    //         return ( 
-    //             <div className="list_item" key={index} data-index={index} onClick={handleClick}> 
-    //                 <div className="icon"> <img src={item.img} alt='icn' /> </div> 
-    //                 <div className="crypto_tic">{item.ticker}</div> 
-    //                 <div className="crypto_name" > {item.name}</div>     
-    //             </div> 
-    //         ) 
-    //     }) 
-    //   } 
-
-
-
-
-    
+    const filtered = cryptoInfo.filter((crypto) => crypto.ticker.includes(query.toLowerCase()));
     return (
+      filtered
+    );
+  };
+  useEffect(() => {
+    const filteredCryptoLeft = filterCryptoLeft(query);
+    setCryptoList(filteredCryptoLeft);
+  }, [query]);
 
-        <div className={isOpen ? "dropdown_active" : "dropdown"} >
+  const setCryptoItemLeft = () => cryptoList.map((item, index) => (
+    <div aria-hidden="true" className="list_item" key={item.ticker} data-index={index} onClick={handleClick}>
+      <div className="icon"><img src={item.img} alt="icn" /></div>
+      <div id="tickerCrypto" className="crypto_tic">{item.ticker}</div>
+      <div className="crypto_name">{item.name}</div>
+    </div>
+  ));
 
-            <div className={error ? 'error' : 'none'}> Min amount {min}</div>
+  useEffect(() => {
+    setCryptoItem(setCryptoItemLeft());
+  }, [cryptoList]);
 
-            <div className="dropdown_form">
-                <input onChange={e => inputHandler(e)} name="input_name" value={input} />
-                <img src={require('../line.svg').default} alt="line" />
-            </div>
+  const listRef = useRef(null);
+  const dropRef = useRef(null);
 
-            <div className="dropdown_item">
-                <div className="active_item" >
-                <div className="icon"><img src={from.img} /></div>
-                    <input className="crypto_tic" value={from.ticker} disabled></input>
-                </div>
-                <button className="drop_button" onClick={handleOpen}>
-                    <img src={require('../Vector.svg').default} alt="vector" />
-                </button>
-            </div>
-            <input className="search" onChange={e => setQuery(e.target.value)}  type="text"   />
-            {
+  useEffect(() => {
+    const handleClickEvent = (e) => {
+      if (!listRef.current) {
+        setOpen(true);
+      }
+      if (!dropRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('click', handleClickEvent);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickEvent);
+    };
+  }, [isOpen]);
+
+  return (
+
+    <div ref={dropRef} className={isOpen ? 'dropdown_active' : 'dropdown'}>
+
+      <div className={error ? 'error' : 'none'}>
+        {' '}
+        Min amount
+        {min}
+      </div>
+
+      <div className={isOpen ? 'none' : 'dropdown_form '}>
+        <input onChange={(e) => inputHandler(e)} name="input_name" value={input} />
+        <img src={line} alt="line" />
+      </div>
+      <input className={isOpen ? 'search' : 'none'} onChange={(e) => setQuery(e.target.value)} value={query} placeholder="Search" type="text" />
+
+      <div className="dropdown_item">
+        <div className={isOpen ? 'none' : 'active_item'}>
+          <div className="icon"><img src={from.img} alt="icon" /></div>
+          <input className="crypto_tic" value={from.ticker} disabled />
+        </div>
+        <button type="button" className="drop_button" onClick={() => setOpen(!isOpen)}>
+          <img className={isOpen ? 'none' : 'var'} src={vector} alt="vector" />
+          <img className={isOpen ? 'var_off' : 'none'} src={vectorOff} alt="vector" />
+        </button>
+
+      </div>
+      {
                 isOpen && (
-                    <div className="dropdown_menu">
-                        <div className="list">
-                            {crypto_item}
-                        </div>
-                    </div>
+                <div ref={listRef} className="dropdown_menu">
+                  <div className="list">
+                    {cryptoItem}
+                  </div>
+                </div>
                 )
             }
 
-        </div>
-    )
+    </div>
+  );
 }
 
 export default Left;
