@@ -14,26 +14,32 @@ function Wrapper({ setErrorMessege }) {
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [from, setFrom] = useState({
-    ticker: 'btc',
-    img: 'https://content-api.changenow.io/uploads/btc_d8db07f87d.svg',
+    ticker: '',
+    image: '',
   });
   const [to, setTo] = useState({
-    ticker: 'eth',
-    img: 'https://content-api.changenow.io/uploads/eth_f4ebb54ec0.svg',
+    ticker: '',
+    image: '',
   });
+
   const changeDataInfo = async () => {
     const dataInfo = await axios.get(`https://api.changenow.io/v1/currencies?active=true${apiKey}`);
     setDate(dataInfo.data);
+    setFrom(dataInfo.data[0])
+    setTo(dataInfo.data[1])
   };
+
   useEffect(() => {
     changeDataInfo(apiKey);
   }, []);
 
   const changeResult = async () => {
+    if (min > input) {
+      setErrorMessege(true);
+      return
+    }
     setLoading(true);
     try {
-      const minData = await axios.get(`https://api.changenow.io/v1/min-amount/${from.ticker}_${to.ticker}?api_key=${apiKey}`);
-      setMin(minData.data.minAmount);
       const amountData = await axios.get(`https://api.changenow.io/v1/exchange-amount/${input}/${from.ticker}_${to.ticker}?api_key=${apiKey}`);
       setResult(amountData.data.estimatedAmount);
       setErrorMessege(false);
@@ -43,6 +49,15 @@ function Wrapper({ setErrorMessege }) {
     }
     setLoading(false);
   };
+
+  const changeMin = async () => {
+    const minData = await axios.get(`https://api.changenow.io/v1/min-amount/${from.ticker}_${to.ticker}?api_key=${apiKey}`);
+    setMin(minData.data.minAmount);
+  }
+
+  useEffect(() => {
+    changeMin()
+  }, [from, to])
 
   useEffect(() => {
     changeResult();
@@ -82,6 +97,3 @@ function Wrapper({ setErrorMessege }) {
 }
 export default Wrapper;
 
-// Wrapper.propTypes = {
-//   setErrorMessege: propsTypes .string.isRequired,
-// };

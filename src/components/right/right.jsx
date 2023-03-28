@@ -11,14 +11,8 @@ function Right({
   const [cryptoItemRight, setCryptoItemRight] = useState();
   const [cryptoList, setCryptoList] = useState([]);
 
-  const cryptoInfo = data.map((item) => ({
-    ticker: `${item.ticker}`,
-    name: `${item.name}`,
-    img: `${item.image}`,
-  }));
-
   useEffect(() => {
-    setCryptoList(cryptoInfo);
+    setCryptoList(data);
   }, [data]);
 
   const handleClick = (e) => {
@@ -31,13 +25,12 @@ function Right({
 
   const filterCrypto = () => {
     if (!queryTo) {
-      return (cryptoInfo);
+      return data;
     }
-    const filtered = cryptoInfo.filter((crypto) => crypto.ticker.includes(queryTo.toLowerCase()));
-    return (
-      filtered
-    );
+    const filtered = data.filter((crypto) => crypto.ticker.includes(queryTo.toLowerCase()));
+    return filtered;
   };
+
   useEffect(() => {
     const filteredCrypto = filterCrypto(queryTo);
     setCryptoList(filteredCrypto);
@@ -45,7 +38,7 @@ function Right({
 
   const setCryptoItem2 = () => cryptoList.map((item, index) => (
     <div className="list_item" role="button" data-index={index} key={item.ticker} aria-hidden="true" onClick={handleClick}>
-      <div className="icon"><img src={item.img} alt="icn" /></div>
+      <div className="icon"><img src={item.image} alt="icn" /></div>
       <div id="tickerCrypto" className="crypto_tic">{item.ticker}</div>
       <div className="crypto_name">{item.name}</div>
     </div>
@@ -85,7 +78,7 @@ function Right({
 
       <div className="dropdown_item">
         <div className={isActive ? 'none' : 'active_item'}>
-          <div className="icon"><img className="genimg" src={to.img} alt="icon " /></div>
+          <div className="icon"><img className="genimg" src={to.image} alt="icon " /></div>
           <input className="crypto_tic" value={to.ticker} disabled />
         </div>
         <button type="button" className="drop_button" onClick={() => setActive(!isActive)}>
@@ -95,14 +88,14 @@ function Right({
       </div>
 
       {
-                isActive && (
-                <div ref={listRef} className="dropdown_menu">
-                  <div className="list">
-                    {cryptoItemRight}
-                  </div>
-                </div>
-                )
-            }
+        isActive && (
+          <div ref={listRef} className="dropdown_menu">
+            <div className="list">
+              {cryptoItemRight}
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 }

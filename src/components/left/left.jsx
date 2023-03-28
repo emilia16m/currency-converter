@@ -12,14 +12,8 @@ function Left({
   const [cryptoItem, setCryptoItem] = useState();
   const [cryptoList, setCryptoList] = useState([]);
 
-  const cryptoInfo = data.map((item) => ({
-    ticker: `${item.ticker}`,
-    name: `${item.name}`,
-    img: `${item.image}`,
-  }));
-
   useEffect(() => {
-    setCryptoList(cryptoInfo);
+    setCryptoList(data);
   }, [data]);
 
   const inputHandler = (e) => {
@@ -31,6 +25,7 @@ function Left({
       setError(false);
     }
   };
+
   const handleClick = (e) => {
     const index = e.currentTarget.getAttribute('data-index');
     const value = cryptoList[index];
@@ -38,15 +33,15 @@ function Left({
     setOpen(false);
     setQuery('');
   };
+
   const filterCryptoLeft = () => {
     if (!query) {
-      return (cryptoInfo);
+      return data;
     }
-    const filtered = cryptoInfo.filter((crypto) => crypto.ticker.includes(query.toLowerCase()));
-    return (
-      filtered
-    );
+    const filtered = data.filter((crypto) => crypto.ticker.includes(query.toLowerCase()));
+    return filtered;
   };
+
   useEffect(() => {
     const filteredCryptoLeft = filterCryptoLeft(query);
     setCryptoList(filteredCryptoLeft);
@@ -54,7 +49,7 @@ function Left({
 
   const setCryptoItemLeft = () => cryptoList.map((item, index) => (
     <div aria-hidden="true" className="list_item" key={item.ticker} data-index={index} onClick={handleClick}>
-      <div className="icon"><img src={item.img} alt="icn" /></div>
+      <div className="icon"><img src={item.image} alt="icn" /></div>
       <div id="tickerCrypto" className="crypto_tic">{item.ticker}</div>
       <div className="crypto_name">{item.name}</div>
     </div>
@@ -102,7 +97,7 @@ function Left({
 
       <div className="dropdown_item">
         <div className={isOpen ? 'none' : 'active_item'}>
-          <div className="icon"><img src={from.img} alt="icon" /></div>
+          <div className="icon"><img src={from.image} alt="icon" /></div>
           <input className="crypto_tic" value={from.ticker} disabled />
         </div>
         <button type="button" className="drop_button" onClick={() => setOpen(!isOpen)}>
@@ -112,14 +107,14 @@ function Left({
 
       </div>
       {
-                isOpen && (
-                <div ref={listRef} className="dropdown_menu">
-                  <div className="list">
-                    {cryptoItem}
-                  </div>
-                </div>
-                )
-            }
+        isOpen && (
+          <div ref={listRef} className="dropdown_menu">
+            <div className="list">
+              {cryptoItem}
+            </div>
+          </div>
+        )
+      }
 
     </div>
   );
